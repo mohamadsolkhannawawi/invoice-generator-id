@@ -5,16 +5,9 @@ import { useInvoiceStore } from "@/store/useInvoiceStore";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { MainForm } from "@/components/invoice/main-form";
 import { Loader2, RefreshCcw, Save } from "lucide-react";
 
-// Placeholder komponen untuk Form Input dan Preview PDF
-const InvoiceForm = () => (
-    <div className="p-4 space-y-4">
-        <div className="p-4 border border-dashed rounded-lg border-slate-300 bg-slate-50 text-slate-500 text-center">
-            Area Form Input
-        </div>
-    </div>
-);
 
 const InvoicePreview = () => (
     <div className="flex items-center justify-center h-full bg-slate-100 border rounded-lg">
@@ -90,14 +83,7 @@ export default function Home() {
             <div className="flex-1 max-w-[1600px] w-full mx-auto p-4 md:p-6 lg:flex gap-6 overflow-hidden">
                 {/* KIRI: Form Input (Scrollable) */}
                 <div className="w-full lg:w-1/2 flex flex-col gap-4 overflow-y-auto h-full pr-1">
-                    <Card className="border-slate-200 shadow-sm">
-                        <div className="p-4 border-b bg-slate-50/50">
-                            <h2 className="font-semibold text-slate-700">
-                                Detail Transaksi
-                            </h2>
-                        </div>
-                        <InvoiceForm />
-                    </Card>
+                    <MainForm />
 
                     <Card className="border-slate-200 shadow-sm">
                         <div className="p-4 border-b bg-slate-50/50">
