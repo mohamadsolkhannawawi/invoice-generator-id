@@ -6,6 +6,13 @@ import { InvoiceSchema, InvoiceType } from "@/lib/schemas";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectTrigger,
+    SelectContent,
+    SelectItem,
+    SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import { ItemList } from "./item-list";
@@ -37,7 +44,7 @@ export const MainForm = () => {
         mode: "onChange", // Validasi real-time
     });
 
-    const { register, watch, control } = methods;
+    const { register, watch, control, setValue } = methods;
 
     // --- LOGIKA SINKRONISASI REAL-TIME ---
     // Pantau perubahan form, lalu update Zustand agar Preview PDF berubah
@@ -57,6 +64,10 @@ export const MainForm = () => {
             if (value.taxRate !== undefined) setTaxRate(Number(value.taxRate));
             if (value.discount !== undefined)
                 setDiscount(Number(value.discount));
+
+            // Status payment sync
+            if (value.status !== undefined)
+                setInvoiceInfo({ status: value.status as any });
 
             // Update items array ke store (PENTING untuk PDF)
             if (value.items) {
@@ -107,6 +118,29 @@ export const MainForm = () => {
                                 {...register("date", { valueAsDate: true })}
                                 className="block"
                             />
+                        </div>
+                        {/* Status Pembayaran */}
+                        <div className="space-y-2">
+                            <Label className="text-xs text-slate-500">
+                                Status Pembayaran
+                            </Label>
+                            <Select
+                                defaultValue={data.status}
+                                onValueChange={(val) => setValue("status", val)}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Pilih status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="UNPAID">
+                                        Belum Dibayar
+                                    </SelectItem>
+                                    <SelectItem value="PAID">Lunas</SelectItem>
+                                    <SelectItem value="PARTIAL">
+                                        Pembayaran Sebagian
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 

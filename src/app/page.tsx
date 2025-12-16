@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { MainForm } from "@/components/invoice/main-form";
 import { Loader2, RefreshCcw, Save } from "lucide-react";
 import { InvoicePDFViewer } from "@/components/invoice/pdf-viewer";
+import { pdf } from "@react-pdf/renderer";
+import { SimpleTemplate } from "@/components/pdf-templates/simple-template";
 
 export default function Home() {
     // Hydration fix untuk Zustand persist (mencegah error hydration mismatch)
@@ -63,7 +65,37 @@ export default function Home() {
                         <RefreshCcw className="w-4 h-4 mr-2" />
                         Reset
                     </Button>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                    <Button
+                        size="sm"
+                        className="bg-blue-600 hover:bg-blue-700"
+                        onClick={async () => {
+                            try {
+                                const asPdf = pdf(
+                                    <SimpleTemplate data={data} />
+                                );
+                                const blob = await asPdf.toBlob();
+                                if (!blob)
+                                    throw new Error(
+                                        "Failed to generate PDF blob"
+                                    );
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement("a");
+                                a.href = url;
+                                a.download = `${
+                                    data.invoiceNumber || "invoice"
+                                }.pdf`;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                URL.revokeObjectURL(url);
+                            } catch (err) {
+                                console.error(err);
+                                alert(
+                                    "Gagal membuat PDF. Cek console untuk detail."
+                                );
+                            }
+                        }}
+                    >
                         <Save className="w-4 h-4 mr-2" />
                         Simpan PDF
                     </Button>
