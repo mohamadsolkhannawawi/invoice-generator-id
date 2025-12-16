@@ -15,7 +15,53 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
+
 import { ItemList } from "./item-list";
+
+// Komponen upload logo (inline, agar tidak perlu file baru)
+const LogoUpload = ({
+    value,
+    onChange,
+}: {
+    value?: string;
+    onChange?: (val: string) => void;
+}) => {
+    const [preview, setPreview] = React.useState<string | undefined>(value);
+    const handleFile = (file?: File) => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result as string;
+            setPreview(result);
+            onChange?.(result);
+        };
+        reader.readAsDataURL(file);
+    };
+    return (
+        <div className="flex flex-col items-center gap-2 w-28">
+            <div className="w-24 h-24 rounded-md bg-slate-50 border border-dashed flex items-center justify-center overflow-hidden">
+                {preview ? (
+                    <img
+                        src={preview}
+                        alt="Logo"
+                        className="w-full h-full object-contain"
+                    />
+                ) : (
+                    <div className="text-xs text-slate-400">Logo</div>
+                )}
+            </div>
+            <input
+                type="file"
+                accept="image/*"
+                className="text-xs"
+                onChange={(e) => handleFile(e.target.files?.[0])}
+            />
+            <p className="text-xs text-slate-400 text-center">
+                PNG/JPG, max 2MB
+            </p>
+        </div>
+    );
+};
 
 export const MainForm = () => {
     const {
@@ -97,8 +143,43 @@ export const MainForm = () => {
                             Informasi Dasar
                         </h2>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col md:flex-row gap-6">
+                        {/* Logo di kiri */}
+                        <LogoUpload
+                            value={data.senderDetails?.logo}
+                            onChange={(val) =>
+                                setSenderDetails({
+                                    ...data.senderDetails,
+                                    logo: val,
+                                })
+                            }
+                        />
+                        {/* Detail pengirim di kanan */}
+                        <div className="flex-1 grid grid-cols-1 gap-3">
+                            <div className="space-y-2">
+                                <Label className="font-medium text-slate-700">
+                                    Nama Pengirim
+                                </Label>
+                                <Input
+                                    {...register("senderDetails.name")}
+                                    placeholder="Nama Perusahaan / Freelancer"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="font-medium text-slate-700">
+                                    Alamat Pengirim
+                                </Label>
+                                <Textarea
+                                    {...register("senderDetails.address")}
+                                    placeholder="Alamat lengkap..."
+                                    rows={2}
+                                    className="resize-none"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    {/* Input nomor invoice, tanggal, status di bawah */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                         <div className="space-y-2">
                             <Label className="text-xs text-slate-500">
                                 Nomor Invoice
@@ -119,7 +200,6 @@ export const MainForm = () => {
                                 className="block"
                             />
                         </div>
-                        {/* Status Pembayaran */}
                         <div className="space-y-2">
                             <Label className="text-xs text-slate-500">
                                 Status Pembayaran
@@ -142,24 +222,6 @@ export const MainForm = () => {
                                 </SelectContent>
                             </Select>
                         </div>
-                    </div>
-
-                    <Separator className="my-2" />
-
-                    <div className="space-y-3">
-                        <Label className="font-medium text-slate-700">
-                            Dari (Pengirim)
-                        </Label>
-                        <Input
-                            {...register("senderDetails.name")}
-                            placeholder="Nama Perusahaan / Freelancer"
-                        />
-                        <Textarea
-                            {...register("senderDetails.address")}
-                            placeholder="Alamat lengkap..."
-                            rows={2}
-                            className="resize-none"
-                        />
                     </div>
                 </Card>
 

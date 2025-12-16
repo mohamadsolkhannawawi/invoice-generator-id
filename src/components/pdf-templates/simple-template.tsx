@@ -6,6 +6,7 @@ import {
     Document,
     StyleSheet,
     Font,
+    Image,
 } from "@react-pdf/renderer";
 import { InvoiceType } from "@/lib/schemas";
 import { format } from "date-fns";
@@ -161,6 +162,18 @@ export const SimpleTemplate = ({ data }: { data: InvoiceType }) => {
                 {/* Header */}
                 <View style={styles.header}>
                     <View style={styles.logoSection}>
+                        {/* Logo jika ada */}
+                        {data.senderDetails.logo ? (
+                            <Image
+                                src={data.senderDetails.logo}
+                                style={{
+                                    width: 64,
+                                    height: 64,
+                                    marginBottom: 8,
+                                    borderRadius: 8,
+                                }}
+                            />
+                        ) : null}
                         <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                             {data.senderDetails.name || "Nama Perusahaan"}
                         </Text>
