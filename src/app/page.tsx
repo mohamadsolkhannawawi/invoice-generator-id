@@ -7,16 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { MainForm } from "@/components/invoice/main-form";
 import { Loader2, RefreshCcw, Save } from "lucide-react";
-
-
-const InvoicePreview = () => (
-    <div className="flex items-center justify-center h-full bg-slate-100 border rounded-lg">
-        <div className="text-slate-400 text-center">
-            <p>Preview PDF</p>
-            <p className="text-sm">Menunggu Data...</p>
-        </div>
-    </div>
-);
+import { InvoicePDFViewer } from "@/components/invoice/pdf-viewer";
 
 export default function Home() {
     // Hydration fix untuk Zustand persist (mencegah error hydration mismatch)
@@ -116,7 +107,7 @@ export default function Home() {
                         <div className="flex-1 p-4 overflow-hidden bg-slate-300/50 flex items-center justify-center">
                             {/* Area Preview Dokumen */}
                             <div className="bg-white shadow-xl w-[400px] h-[565px] flex items-center justify-center">
-                                <InvoicePreview />
+                                <InvoicePDFViewer />
                             </div>
                         </div>
                     </Card>
